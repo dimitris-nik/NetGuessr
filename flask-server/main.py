@@ -4,18 +4,18 @@ import pandas as pd
 from random import choice, randint
 import waybackpy
 from time import sleep
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
+# from flask_limiter import Limiter
+# from flask_limiter.util import get_remote_address
 
 websitesDir = "./WebsiteList"
 
 app = Flask(__name__)
 CORS(app)
-limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["5 per minute"]
-)
+# limiter = Limiter(
+#     get_remote_address,
+#     app=app,
+#     default_limits=["5 per minute"]
+# )
 
 # Read all csv files in the directory 
 # Files 2003.csv to 2022.csv
@@ -53,7 +53,7 @@ def random_day_month_time():
 
 
 @app.route('/getRandomWebsite', methods=['GET'])
-@limiter.limit("1 per 1 seconds")
+# @limiter.limit("1 per 1 seconds")
 def getRandomWebsite():
     website, year = randomWebsite()
     print(website, year)

@@ -24,6 +24,7 @@ main {
 .iframe-container {
     box-sizing: border-box; 
     width: calc(100% - 30px);
+    background-color: white;
     height: 100%;
     margin:15px;
     /* Radius */
@@ -42,6 +43,7 @@ iframe{
     height: 100%;
     border: none;
     overflow: hidden;
+    border-radius: 6px;
 }
 iframe p {
     /* Center text to parent div */
@@ -68,3 +70,18 @@ p {
     visibility: hidden;
     pointer-events: none;
   }
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    color: black;
+    width: fit-content;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 30px;
+    clip-path: inset(0 100% 0 0);
+    animation: l5 2s steps(11) infinite;
+  }
+  .loader:before {
+    content:"Loading..."
+  }
+  @keyframes l5 {to{clip-path: inset(0 -1ch 0 0)}}
