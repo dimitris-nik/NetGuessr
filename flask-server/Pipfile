@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+pandas = "*"
+waybackpy = "*"
+flask-cors = "*"
+flask-limiter = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"

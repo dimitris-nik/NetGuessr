@@ -1,0 +1,74 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import pandas as pd
+from random import choice, randint
+import waybackpy
+from time import sleep
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+websitesDir = "./WebsiteList"
+
+app = Flask(__name__)
+CORS(app)
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["5 per minute"]
+)
+
+# Read all csv files in the directory 
+# Files 2003.csv to 2022.csv
+# Ignore column 1
+def readAllFiles():
+    websites = {}
+    for i in range(2003, 2023):
+        filename = websitesDir + "/" + str(i) + ".csv"
+        df = pd.read_csv(filename, header=None, usecols=[1])
+        websites[str(i)] = df[1].tolist()
+    return websites
+        
+
+websites = readAllFiles()
+
+@app.route('/getAllWebsites/<year>', methods=['GET'])
+def getWebsite(year):
+    if year in websites:
+        return jsonify(websites[year])
+    else:
+        return jsonify({"error": "Year not found"}), 404
+
+def randomWebsite():
+    year = randint(2003, 2022)
+    return [choice(websites[str(year)]), year]
+
+def random_day_month_time():
+    month = randint(1, 12)
+    day = randint(1, 30)
+    hour = randint(0, 23)
+    minute = randint(0, 59)
+    second = randint(0, 59)
+    return f"{month}{day}{hour}{minute}{second}"
+
+
+
+@app.route('/getRandomWebsite', methods=['GET'])
+@limiter.limit("1 per 1 seconds")
+def getRandomWebsite():
+    website, year = randomWebsite()
+    print(website, year)
+    timestamp = str(year) + random_day_month_time()
+    print(timestamp)
+    cdx_api = waybackpy.WaybackMachineCDXServerAPI(website)
+    cdx_api.closest = timestamp
+    cdx_api.sort = 'closest'
+    cdx_api.limit = 5
+    snapshot = {}
+    for item in cdx_api.snapshots():
+        snapshot = item
+        break
+    year = snapshot.timestamp[:4]
+    return jsonify({"url": snapshot.archive_url, "year": year})
+
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -1,0 +1,70 @@
+body {
+    background-color: #2a2a2a;
+    font-family: "Smooch Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+
+}
+
+main {  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+.iframe-container {
+    box-sizing: border-box; 
+    width: calc(100% - 30px);
+    height: 100%;
+    margin:15px;
+    /* Radius */
+    border-radius: 10px;
+    border-color: #00cc3a;
+    border-width: 3px;
+    border-style:solid;
+    /* Add green box shadow */
+    box-shadow: 0 0 10px #00cc3a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+iframe{
+    width: 100%;
+    height: 100%;
+    border: none;
+    overflow: hidden;
+}
+iframe p {
+    /* Center text to parent div */
+    text-align: center;
+}
+h1 {
+    font-family: "Geo", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 4rem;
+    margin: 0;
+    color:white;
+    text-shadow: 1px 1px 20px #00cc3a;
+
+}
+
+p {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.hidden {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+  }
