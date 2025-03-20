@@ -1,9 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 import pandas as pd
 from random import choice, randint
 import waybackpy
-from time import sleep
+import requests
+import re
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+
 # from flask_limiter import Limiter
 # from flask_limiter.util import get_remote_address
 
@@ -69,6 +73,40 @@ def getRandomWebsite():
         break
     year = snapshot.timestamp[:4]
     return jsonify({"url": snapshot.archive_url, "year": year})
+
+def rewrite_urls(html, base_url):
+    soup = BeautifulSoup(html, "html.parser")
+    proxy_base = "http://localhost:5000/filter?url="
+    for tag in soup.find_all("a", href=True):
+        tag["href"] = proxy_base + urljoin(base_url, tag["href"])
+    # Ensure <img>, <script>, and <link> sources remain absolute and resolve to the original site
+    for tag in soup.find_all(["img", "script", "link"], {"src": True}):
+        tag["src"] = urljoin(base_url, tag["src"])    
+    return str(soup)
+
+# Vibe coded proxy, pezi na min dulevi
+@app.route('/filter', methods=['GET'])
+def proxy():
+    url = request.args.get('url')
+    if not url:
+        return jsonify({"error": "No URL provided"}), 400
+    try:
+        response = requests.get(url)
+        content_type = response.headers.get("Content-Type", "")
+        pattern = r"\b(200\d|201\d|202\d)\b"
+        
+        if response.status_code == 200:
+            if "text/html" in content_type:
+                modified_html = rewrite_urls(response.text, url)
+                filtered_content = re.sub(pattern, "[REDACTED]", modified_html, flags=re.IGNORECASE)
+                return Response(filtered_content, content_type=content_type)
+            
+            return Response(response.content, content_type=content_type)
+        else:
+            return jsonify({"error": "Failed to fetch content"}), response.status_code
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

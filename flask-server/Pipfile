@@ -9,6 +9,7 @@ pandas = "*"
 waybackpy = "*"
 flask-cors = "*"
 flask-limiter = "*"
+bs4 = "*"
 
 [dev-packages]
 
