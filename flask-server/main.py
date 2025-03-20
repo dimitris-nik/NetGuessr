@@ -8,6 +8,7 @@ import re
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
+
 # from flask_limiter import Limiter
 # from flask_limiter.util import get_remote_address
 
@@ -79,6 +80,9 @@ def rewrite_urls(html, base_url):
     proxy_base = "http://localhost:5000/filter?url="
     for tag in soup.find_all("a", href=True):
         tag["href"] = proxy_base + urljoin(base_url, tag["href"])
+        if tag.get("target") == "_blank":
+            print(tag)
+            tag["target"] = "_self"
     # Ensure <img>, <script>, and <link> sources remain absolute and resolve to the original site
     for tag in soup.find_all(["img", "script", "link"], {"src": True}):
         tag["src"] = urljoin(base_url, tag["src"])    
@@ -92,8 +96,13 @@ def proxy():
         return jsonify({"error": "No URL provided"}), 400
     try:
         response = requests.get(url)
+        # response.encoding = "utf-8"
+        print(response.encoding)
+        encoding = response.apparent_encoding
+        print(encoding)
+        response.encoding = encoding
         content_type = response.headers.get("Content-Type", "")
-        pattern = r"\b(200\d|201\d|202\d)\b"
+        pattern = r"\b(200\d|201\d|202\d|199\d)\b"
         
         if response.status_code == 200:
             if "text/html" in content_type:
@@ -101,7 +110,7 @@ def proxy():
                 filtered_content = re.sub(pattern, "[REDACTED]", modified_html, flags=re.IGNORECASE)
                 return Response(filtered_content, content_type=content_type)
             
-            return Response(response.content, content_type=content_type)
+            return Response(response.content.decode(encoding), content_type=content_type)
         else:
             return jsonify({"error": "Failed to fetch content"}), response.status_code
     except requests.exceptions.RequestException as e:
