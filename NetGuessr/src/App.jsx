@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import Website from "./Website"
 
 const URL = "http://localhost:5000/getRandomWebsite";
