@@ -81,7 +81,6 @@ def rewrite_urls(html, base_url):
     for tag in soup.find_all("a", href=True):
         tag["href"] = proxy_base + urljoin(base_url, tag["href"])
         if tag.get("target") == "_blank":
-            print(tag)
             tag["target"] = "_self"
     # Ensure <img>, <script>, and <link> sources remain absolute and resolve to the original site
     for tag in soup.find_all(["img", "script", "link"], {"src": True}):
@@ -97,9 +96,9 @@ def proxy():
     try:
         response = requests.get(url)
         # response.encoding = "utf-8"
+        print(response.apparent_encoding)
         print(response.encoding)
         encoding = response.apparent_encoding
-        print(encoding)
         response.encoding = encoding
         content_type = response.headers.get("Content-Type", "")
         pattern = r"\b(200\d|201\d|202\d|199\d)\b"

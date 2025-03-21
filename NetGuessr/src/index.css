@@ -24,7 +24,7 @@ main {
 .iframe-container {
     box-sizing: border-box; 
     width: calc(100% - 30px);
-    background-color: white;
+    background: url('assets/bars-fade.svg') center center no-repeat, white ;
     height: 100%;
     margin:15px;
     /* Radius */
@@ -37,7 +37,9 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-size: 10vh;
 }
+
 iframe{
     width: 100%;
     height: 100%;
