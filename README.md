@@ -4,7 +4,7 @@
 
 ---
 
-## 🕸️ What is NetGuessr?
+## What is NetGuessr?
 
 NetGuessr presents you with a version of a popular website from the past 20 years, pulled from the [Internet Archive's Wayback Machine](https://archive.org/web/). Your task is to analyze its design, content, layout, and context clues to guess **what year it's from**.
 
@@ -12,13 +12,13 @@ To keep things challenging, the proxy filters out any explicit mentions of years
 
 ---
 
-## 🛠️ Current Status
+## Current Status
 
 NetGuessr is in **early alpha**. As of now, only the **proxy** feature is working. This means the game currently fetches and filters archived versions of websites, but gameplay logic (like input, scoring, or rounds) hasn't been implemented yet.
 
 ---
 
-## 🔧 Tech Stack
+## Tech Stack
 
 - **Frontend:** [React](https://reactjs.org/) — Renders the UI and handles player interaction.
 - **Backend:** [Flask](https://flask.palletsprojects.com/) — Powers the proxy server and REST API.
@@ -26,7 +26,7 @@ NetGuessr is in **early alpha**. As of now, only the **proxy** feature is workin
 
 ---
 
-## 🎮 How to Play (Future Vision)
+## How to Play (Future Vision)
 
 1. A random website is selected from a curated list of historically significant or popular sites.
 2. A random snapshot of that site is fetched via the Internet Archive.
